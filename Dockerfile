@@ -1,5 +1,23 @@
-# Dockerfile
-FROM openjdk:17
-VOLUME /tmp
-COPY target/Hospital-Management-System-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+# ---------- BUILD STAGE ----------
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /app
+
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline
+
+COPY src src
+RUN ./mvnw clean package -DskipTests
+
+
+# ---------- RUN STAGE ----------
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+COPY --from=build /app/target/Hospital-Management-System-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 9090
+
+ENTRYPOINT ["java","-jar","app.jar"]

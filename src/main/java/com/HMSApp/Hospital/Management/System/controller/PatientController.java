@@ -23,7 +23,7 @@ import com.HMSApp.Hospital.Management.System.repository.PatientRepository;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1")
+//@RequestMapping("/api/v1")
 public class PatientController {
 	
 
@@ -32,6 +32,11 @@ public class PatientController {
 	public PatientController (PatientRepository patientRepository) {
 		super() ;
 		this.patientRepository = patientRepository;
+	}
+	
+	@GetMapping("/")
+	public String getHealth() {
+		return "SERVER is LIVE !!!";
 	}
 	
 	@GetMapping("/patients-list")
